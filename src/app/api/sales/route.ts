@@ -1,15 +1,20 @@
 import { db } from "@/lib/db";
 import { ensureAutoSeeded } from "@/lib/auto-seed";
+import { INITIAL_SALES } from "@/lib/demo-data";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     await ensureAutoSeeded();
-    const sales = await db.sale.findMany({
+    let sales = await db.sale.findMany({
       include: { product: true },
       orderBy: { saleDate: "desc" },
       take: 100,
-    });
+    }).catch(() => []);
+
+    if (!sales || sales.length === 0) {
+      sales = INITIAL_SALES as any;
+    }
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());

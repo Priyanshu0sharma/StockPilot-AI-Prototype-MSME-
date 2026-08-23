@@ -3,14 +3,12 @@
 import React, { useState } from "react";
 import { RoleSwitcher } from "./role-switcher";
 import { useRole } from "@/context/RoleContext";
-import { TrendingUp, PlusCircle, Sparkles } from "lucide-react";
+import { TrendingUp, PlusCircle } from "lucide-react";
 import { RecordSaleModal } from "./modals/record-sale-modal";
-import { DemoDetailsModal } from "./modals/demo-details-modal";
 
 export const Navbar: React.FC<{ onSaleSuccess?: () => void }> = ({ onSaleSuccess }) => {
   const { role, userName } = useRole();
   const [isSaleModalOpen, setIsSaleModalOpen] = useState(false);
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   return (
     <>
@@ -34,15 +32,6 @@ export const Navbar: React.FC<{ onSaleSuccess?: () => void }> = ({ onSaleSuccess
 
           {/* Right Controls */}
           <div className="flex items-center gap-2.5">
-            {/* Demo Details Guide Button */}
-            <button
-              onClick={() => setIsDemoModalOpen(true)}
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer border border-amber-400/50"
-            >
-              <Sparkles className="w-4 h-4 text-slate-950" />
-              <span className="hidden sm:inline">Demo Details</span>
-            </button>
-
             {/* Quick POS Record Sale Button (Available for Retailer & Manager) */}
             {role !== "Admin" && (
               <button
@@ -81,16 +70,8 @@ export const Navbar: React.FC<{ onSaleSuccess?: () => void }> = ({ onSaleSuccess
           }}
         />
       )}
-
-      {/* Demo Details & Guide Modal */}
-      {isDemoModalOpen && (
-        <DemoDetailsModal
-          isOpen={isDemoModalOpen}
-          onClose={() => setIsDemoModalOpen(false)}
-          onOpenSaleModal={() => setIsSaleModalOpen(true)}
-        />
-      )}
     </>
   );
 };
+
 

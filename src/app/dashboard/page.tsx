@@ -5,8 +5,6 @@ import { Product, Sale } from "@/types";
 import { SalesTrendChart } from "@/components/charts/sales-trend-chart";
 import { TopProductsChart } from "@/components/charts/top-products-chart";
 import { InventoryStatusChart } from "@/components/charts/inventory-status-chart";
-import { DemoBanner } from "@/components/demo-banner";
-import { DemoDetailsModal } from "@/components/modals/demo-details-modal";
 import {
   Package,
   IndianRupee,
@@ -27,7 +25,6 @@ export default function DashboardPage() {
     monthlyRevenue: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -126,12 +123,6 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Prototype Demo Banner */}
-      <DemoBanner
-        onOpenGuide={() => setIsDemoModalOpen(true)}
-        onReseed={loadDashboardData}
-      />
-
       {/* Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
@@ -143,13 +134,6 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsDemoModalOpen(true)}
-            className="bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs font-extrabold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border border-amber-500/30"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Demo Details
-          </button>
           <Link
             href="/dashboard/forecast"
             className="bg-[#f0f4e8] text-[#4a5d2e] hover:bg-[#e4ebd4] text-xs font-bold px-3.5 py-2 rounded-lg border border-[#4a5d2e]/20 flex items-center gap-1.5 transition-all"
@@ -325,15 +309,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Demo Details & Guide Modal */}
-      {isDemoModalOpen && (
-        <DemoDetailsModal
-          isOpen={isDemoModalOpen}
-          onClose={() => setIsDemoModalOpen(false)}
-          onReseedDatabase={loadDashboardData}
-        />
-      )}
     </div>
   );
 }

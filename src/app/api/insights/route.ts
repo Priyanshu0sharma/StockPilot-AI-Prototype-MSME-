@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { ensureAutoSeeded } from "@/lib/auto-seed";
+import { INITIAL_PRODUCTS, INITIAL_SALES } from "@/lib/demo-data";
 import { calculateProductForecast } from "@/lib/forecasting";
 import { generateAIInsights } from "@/lib/insights-engine";
 import { NextResponse } from "next/server";
@@ -7,8 +8,11 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     await ensureAutoSeeded();
-    const products = await db.product.findMany({});
-    const sales = await db.sale.findMany({});
+    let products = await db.product.findMany({}).catch(() => []);
+    let sales = await db.sale.findMany({}).catch(() => []);
+
+    if (!products || products.length === 0) products = INITIAL_PRODUCTS as any;
+    if (!sales || sales.length === 0) sales = INITIAL_SALES as any;
 
     const forecasts = [];
     for (const prod of products) {

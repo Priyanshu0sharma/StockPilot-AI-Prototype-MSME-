@@ -11,22 +11,31 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const dbUrl = process.env.DATABASE_URL || "";
 
-  // 1. If PostgreSQL database URL is provided (e.g. Neon, Supabase, Vercel Postgres)
+  // 1. If PostgreSQL connection string is provided (e.g. Neon, Supabase, Vercel Postgres)
   if (
     dbUrl.startsWith("postgres://") ||
     dbUrl.startsWith("postgresql://") ||
     dbUrl.startsWith("prisma://")
   ) {
-    const pool = new Pool({ connectionString: dbUrl });
-    const adapter = new PrismaPg(pool);
-    return new PrismaClient({ adapter });
+    try {
+      const pool = new Pool({ connectionString: dbUrl });
+      const adapter = new PrismaPg(pool);
+      return new PrismaClient({ adapter });
+    } catch (e) {
+      console.warn("Fallback PostgreSQL client:", e);
+      return new PrismaClient();
+    }
   }
 
   // 2. Pure JS LibSQL adapter for SQLite (Works on Vercel Serverless & Local Dev without C++ native compilation)
-  const dbPath = path.join(process.cwd(), "prisma", "dev.db").replace(/\\/g, "/");
-  const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
-
-  return new PrismaClient({ adapter });
+  try {
+    const dbPath = path.join(process.cwd(), "prisma", "dev.db").replace(/\\/g, "/");
+    const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+    return new PrismaClient({ adapter });
+  } catch (e) {
+    console.warn("Fallback SQLite client:", e);
+    return new PrismaClient();
+  }
 }
 
 export const db = globalForPrisma.prisma ?? createPrismaClient();

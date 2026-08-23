@@ -16,15 +16,19 @@ import {
 
 export default function AdminPage() {
   const { role } = useRole();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([
+    { id: "usr-1", clerkId: "clerk-1", name: "Ramesh Sharma", email: "retailer@stockpilot.ai", role: "Retailer", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: "usr-2", clerkId: "clerk-2", name: "Anita Gupta", email: "manager@stockpilot.ai", role: "Manager", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: "usr-3", clerkId: "clerk-3", name: "Suresh Kumar", email: "admin@stockpilot.ai", role: "Admin", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  ]);
   const [analytics, setAnalytics] = useState({
-    totalUsers: 0,
-    totalProducts: 0,
-    totalSalesCount: 0,
-    totalRevenue: 0,
-    activeRecommendations: 0,
+    totalUsers: 3,
+    totalProducts: 8,
+    totalSalesCount: 240,
+    totalRevenue: 185450,
+    activeRecommendations: 4,
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [reseedLoading, setReseedLoading] = useState(false);
 
   useEffect(() => {

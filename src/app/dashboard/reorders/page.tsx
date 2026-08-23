@@ -34,8 +34,81 @@ interface ReorderItem {
 
 export default function ReordersPage() {
   const { role } = useRole();
-  const [recommendations, setRecommendations] = useState<ReorderItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState<ReorderItem[]>([
+    {
+      productId: "prod-maggi-70",
+      productName: "Maggi 2-Minute Noodles 70g",
+      category: "Packaged Food",
+      sku: "SKU-MAGGI-70",
+      currentStock: 32,
+      minStockLevel: 60,
+      predictedDemand30Days: 540,
+      safetyStock: 60,
+      requiredStockTotal: 600,
+      recommendedOrderQuantity: 82,
+      estimatedCost: 943,
+      daysUntilStockout: 2,
+      urgency: "High",
+      reason: "Critical: Stock is at 32 units. Projected stockout in 2 days!",
+      supplierName: "Nestle India Ltd",
+      status: "Pending",
+    },
+    {
+      productId: "prod-fortune-1l",
+      productName: "Fortune Sunlite Oil 1L",
+      category: "Groceries",
+      sku: "SKU-FORTUNE-1L",
+      currentStock: 22,
+      minStockLevel: 30,
+      predictedDemand30Days: 150,
+      safetyStock: 30,
+      requiredStockTotal: 180,
+      recommendedOrderQuantity: 28,
+      estimatedCost: 3500,
+      daysUntilStockout: 4,
+      urgency: "High",
+      reason: "Critical: Stock is at 22 units. Projected stockout in 4 days!",
+      supplierName: "Adani Wilmar Ltd",
+      status: "Pending",
+    },
+    {
+      productId: "prod-amul-100g",
+      productName: "Amul Butter 100g",
+      category: "Dairy",
+      sku: "SKU-AMUL-100G",
+      currentStock: 18,
+      minStockLevel: 35,
+      predictedDemand30Days: 240,
+      safetyStock: 35,
+      requiredStockTotal: 275,
+      recommendedOrderQuantity: 35,
+      estimatedCost: 1750,
+      daysUntilStockout: 3,
+      urgency: "High",
+      reason: "Critical: Stock is at 18 units. Projected stockout in 3 days!",
+      supplierName: "Gujarat Milk Federation",
+      status: "Pending",
+    },
+    {
+      productId: "prod-surf-1kg",
+      productName: "Surf Excel Washing Powder 1kg",
+      category: "Household",
+      sku: "SKU-SURF-1KG",
+      currentStock: 15,
+      minStockLevel: 30,
+      predictedDemand30Days: 160,
+      safetyStock: 30,
+      requiredStockTotal: 190,
+      recommendedOrderQuantity: 32,
+      estimatedCost: 3680,
+      daysUntilStockout: 3,
+      urgency: "High",
+      reason: "Critical: Stock is at 15 units. Projected stockout in 3 days!",
+      supplierName: "Hindustan Unilever Ltd",
+      status: "Pending",
+    },
+  ]);
+  const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,17 +116,14 @@ export default function ReordersPage() {
   }, []);
 
   const fetchReorderSuggestions = async () => {
-    setLoading(true);
     try {
       const res = await fetch("/api/reorders");
       const data = await res.json();
-      if (data.success) {
+      if (data.success && data.recommendations?.length > 0) {
         setRecommendations(data.recommendations);
       }
     } catch (err) {
       console.error("Failed to load reorder suggestions:", err);
-    } finally {
-      setLoading(false);
     }
   };
 

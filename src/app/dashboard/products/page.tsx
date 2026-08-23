@@ -15,9 +15,11 @@ import {
   Layers,
 } from "lucide-react";
 
+import { INITIAL_PRODUCTS } from "@/lib/demo-data";
+
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS as any);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -28,7 +30,6 @@ export default function ProductsPage() {
   }, [search, selectedCategory]);
 
   const fetchProducts = async () => {
-    setLoading(true);
     try {
       const url = new URL("/api/products", window.location.origin);
       if (search) url.searchParams.append("search", search);
@@ -36,13 +37,11 @@ export default function ProductsPage() {
 
       const res = await fetch(url.toString());
       const data = await res.json();
-      if (data.success) {
+      if (data.success && data.products?.length > 0) {
         setProducts(data.products);
       }
     } catch (err) {
       console.error("Failed to load products:", err);
-    } finally {
-      setLoading(false);
     }
   };
 

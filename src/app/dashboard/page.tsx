@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Product, Sale } from "@/types";
+import { useRole } from "@/context/RoleContext";
+import { INITIAL_PRODUCTS, INITIAL_SALES } from "@/lib/demo-data";
 import { SalesTrendChart } from "@/components/charts/sales-trend-chart";
 import { TopProductsChart } from "@/components/charts/top-products-chart";
 import { InventoryStatusChart } from "@/components/charts/inventory-status-chart";
@@ -13,25 +15,28 @@ import {
   ArrowUpRight,
   Sparkles,
   ShoppingBag,
+  UserCheck,
+  ShieldCheck,
+  Store,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [sales, setSales] = useState<Sale[]>([]);
+  const { role, userName } = useRole();
+  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS as any);
+  const [sales, setSales] = useState<Sale[]>(INITIAL_SALES as any);
   const [metrics, setMetrics] = useState({
-    dailyRevenue: 0,
-    weeklyRevenue: 0,
-    monthlyRevenue: 0,
+    dailyRevenue: 6240,
+    weeklyRevenue: 43500,
+    monthlyRevenue: 185450,
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
   }, []);
 
   const loadDashboardData = async () => {
-    setLoading(true);
     try {
       const [prodRes, salesRes] = await Promise.all([
         fetch("/api/products"),
@@ -41,15 +46,15 @@ export default function DashboardPage() {
       const prodData = await prodRes.json();
       const salesData = await salesRes.json();
 
-      if (prodData.success) setProducts(prodData.products);
-      if (salesData.success) {
+      if (prodData.success && prodData.products?.length > 0) {
+        setProducts(prodData.products);
+      }
+      if (salesData.success && salesData.sales?.length > 0) {
         setSales(salesData.sales);
-        setMetrics(salesData.metrics);
+        if (salesData.metrics) setMetrics(salesData.metrics);
       }
     } catch (err) {
       console.error("Failed to load dashboard data:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -149,6 +154,46 @@ export default function DashboardPage() {
             Smart Reorders
           </Link>
         </div>
+      </div>
+
+      {/* Role-tailored Operational Bar */}
+      <div className="bg-slate-900 text-white p-4 rounded-xl shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-white/10 text-amber-400 font-bold">
+            {role === "Retailer" && <Store className="w-5 h-5" />}
+            {role === "Manager" && <UserCheck className="w-5 h-5" />}
+            {role === "Admin" && <ShieldCheck className="w-5 h-5" />}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-xs text-white">Active Operational Role: {role} Mode</span>
+              <span className="bg-[#4a5d2e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                {userName}
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-0.5">
+              {role === "Retailer" && "Logging daily POS sales, viewing stock depletion warnings, and 7-day demand spikes."}
+              {role === "Manager" && "Reviewing AI purchase reorders (4 pending POs), approving supplier orders & receiving shipments."}
+              {role === "Admin" && "Monitoring platform-wide sales volume (₹1.85L), catalog health, user accounts & system diagnostics."}
+            </p>
+          </div>
+        </div>
+        {role === "Manager" && (
+          <Link
+            href="/dashboard/reorders"
+            className="bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-xs px-3.5 py-2 rounded-lg shrink-0 transition-all text-center"
+          >
+            Approve Purchase Orders →
+          </Link>
+        )}
+        {role === "Admin" && (
+          <Link
+            href="/dashboard/admin"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-3.5 py-2 rounded-lg shrink-0 transition-all text-center"
+          >
+            Manage User Accounts →
+          </Link>
+        )}
       </div>
 
       {/* KPI Cards */}

@@ -145,6 +145,39 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {/* Prototype Demo Info & Credentials Reference */}
+      <div className="bg-gradient-to-r from-slate-900 to-[#2c3919] text-white p-5 rounded-2xl border border-slate-800 shadow-xs space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-amber-400" />
+            <h3 className="text-sm font-bold tracking-tight">Prototype Demo Credentials & Control Hub</h3>
+          </div>
+          <span className="bg-amber-400 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">
+            MSME SaaS Evaluation
+          </span>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          The database comes pre-seeded with 30-day realistic sales transactions for 8 high-velocity Indian Kirana SKUs (Parle-G, Maggi, Tata Salt, Fortune Oil, Amul Butter, Dettol, Cadbury, Surf Excel). Use the top Navbar role pill to instantly switch persona.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div className="bg-white/10 p-3 rounded-xl border border-white/10 text-xs">
+            <span className="text-amber-300 font-bold block">🛒 Retailer Role</span>
+            <span className="text-slate-200 font-mono text-[11px]">Ramesh Sharma</span>
+            <p className="text-[10px] text-slate-400 mt-1">POS Sales, Stock View & Alerts</p>
+          </div>
+          <div className="bg-white/10 p-3 rounded-xl border border-white/10 text-xs">
+            <span className="text-amber-300 font-bold block">📋 Manager Role</span>
+            <span className="text-slate-200 font-mono text-[11px]">Anita Gupta</span>
+            <p className="text-[10px] text-slate-400 mt-1">PO Approvals & Shipment Receipts</p>
+          </div>
+          <div className="bg-white/10 p-3 rounded-xl border border-white/10 text-xs">
+            <span className="text-amber-300 font-bold block">⚡ Admin Role</span>
+            <span className="text-slate-200 font-mono text-[11px]">Suresh Kumar</span>
+            <p className="text-[10px] text-slate-400 mt-1">System Diagnostics & DB Seeding</p>
+          </div>
+        </div>
+      </div>
+
       {/* User Accounts Management Table */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         <div className="p-4 bg-[#f8f8f5] border-b border-slate-200 flex items-center justify-between">

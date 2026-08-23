@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
+import { ensureAutoSeeded } from "@/lib/auto-seed";
 import { calculateProductForecast } from "@/lib/forecasting";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
+    await ensureAutoSeeded();
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get("productId");
 

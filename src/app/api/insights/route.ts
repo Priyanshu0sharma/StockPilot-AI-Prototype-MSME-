@@ -1,10 +1,12 @@
 import { db } from "@/lib/db";
+import { ensureAutoSeeded } from "@/lib/auto-seed";
 import { calculateProductForecast } from "@/lib/forecasting";
 import { generateAIInsights } from "@/lib/insights-engine";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    await ensureAutoSeeded();
     const products = await db.product.findMany({});
     const sales = await db.sale.findMany({});
 

@@ -1,10 +1,12 @@
 import { db } from "@/lib/db";
+import { ensureAutoSeeded } from "@/lib/auto-seed";
 import { calculateProductForecast } from "@/lib/forecasting";
 import { calculateSmartReorder } from "@/lib/reorder-engine";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    await ensureAutoSeeded();
     const users = await db.user.findMany({ orderBy: { createdAt: "desc" } });
     const productCount = await db.product.count();
     const salesCount = await db.sale.count();

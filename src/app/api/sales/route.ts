@@ -1,8 +1,10 @@
 import { db } from "@/lib/db";
+import { ensureAutoSeeded } from "@/lib/auto-seed";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    await ensureAutoSeeded();
     const sales = await db.sale.findMany({
       include: { product: true },
       orderBy: { saleDate: "desc" },

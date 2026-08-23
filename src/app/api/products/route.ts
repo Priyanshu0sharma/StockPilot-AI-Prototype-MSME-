@@ -1,8 +1,10 @@
 import { db } from "@/lib/db";
+import { ensureAutoSeeded } from "@/lib/auto-seed";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
+    await ensureAutoSeeded();
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const search = searchParams.get("search");
